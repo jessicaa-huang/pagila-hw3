@@ -20,15 +20,15 @@ SELECT
     customer.first_name,
     customer.last_name,
     film.title,
-    recent_rental.rental_date
+    rental.rental_date
 FROM customer
-CROSS JOIN LATERAL (
+JOIN LATERAL (
     SELECT rental.rental_date, inventory.film_id
     FROM rental
-    JOIN inventory ON rental.inventory_id = inventory.inventory_id
+    JOIN inventory USING (inventory_id)
     WHERE rental.customer_id = customer.customer_id
-    ORDER BY rental.rental_date DESC
+    ORDER BY rental.rental_date DESC, inventory.film_id DESC
     LIMIT 1
-) AS recent_rental
-JOIN film ON film.film_id = recent_rental.film_id
+) AS rental ON true
+JOIN film USING (film_id)
 ORDER BY customer.last_name, customer.first_name;
