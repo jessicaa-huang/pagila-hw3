@@ -9,6 +9,11 @@
  * and you can SELECT from that VIEW instead of constructing the entire query manually.
  */
 
+/*
+ * Find every documentary film that is rated G.
+ * Report the title and the actors.
+ */
+
 SELECT title, actors
 FROM nicer_but_slower_film_list
 WHERE category = 'Documentary'

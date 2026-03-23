@@ -12,19 +12,23 @@
  * (or slightly less conveniently with subqueries).
  */
 
+/*
+ * For each customer, find the movie that they have rented most recently.
+ */
+
 SELECT
     customer.first_name,
     customer.last_name,
     film.title,
-    rental.rental_date
+    recent_rental.rental_date
 FROM customer
-JOIN LATERAL (
+CROSS JOIN LATERAL (
     SELECT rental.rental_date, inventory.film_id
     FROM rental
-    JOIN inventory USING (inventory_id)
+    JOIN inventory ON rental.inventory_id = inventory.inventory_id
     WHERE rental.customer_id = customer.customer_id
     ORDER BY rental.rental_date DESC
     LIMIT 1
-) AS rental ON true
-JOIN film USING (film_id)
+) AS recent_rental
+JOIN film ON film.film_id = recent_rental.film_id
 ORDER BY customer.last_name, customer.first_name;
